@@ -238,13 +238,26 @@ def analyze_transactions(transactions):
         
     df = pd.DataFrame(transactions)
     
-    # Load fraud detection model and column names
+    # Load fraud detection model and column names using relative paths
     try:
-        with open("/home/alex/Documents/loan/backend/backend/loan_analyzer/utils/random_forest_fraud_model.pkl", 'rb') as file:
+        import os
+        from django.conf import settings
+
+        # Define paths relative to the Django project
+        BASE_DIR = settings.BASE_DIR
+        MODEL_PATH = os.path.join(BASE_DIR, 'loan_analyzer', 'utils', 'random_forest_fraud_model.pkl')
+        COLUMNS_PATH = os.path.join(BASE_DIR, 'loan_analyzer', 'utils', 'column_names.pkl')
+
+        # Load the model and column names
+        with open(MODEL_PATH, 'rb') as file:
             fraud_model = pickle.load(file)
-        with open("/home/alex/Documents/loan/backend/backend/loan_analyzer/utils/column_names.pkl", 'rb') as file:
+        with open(COLUMNS_PATH, 'rb') as file:
             column_names = pickle.load(file)
             
+        # Debug print statements
+        print(f"Model loaded from: {MODEL_PATH}")
+        print(f"Columns loaded from: {COLUMNS_PATH}")
+
         fraud_check_df = df[['amount', 'oldbalanceOrg', 'newbalanceOrig', 
                             'oldbalanceDest', 'newbalanceDest', 'type_CASH_IN',
                             'type_CASH_OUT', 'type_DEBIT', 'type_PAYMENT',

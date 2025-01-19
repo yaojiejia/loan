@@ -14,12 +14,10 @@ def upload_files(request):
             uploaded_files = []
             analysis_results = []
 
-            # Create data directory if it doesn't exist
             upload_dir = os.path.join(settings.BASE_DIR.parent, 'data')
             os.makedirs(upload_dir, exist_ok=True)
 
             for file in files:
-                # Validate file extension
                 allowed_extensions = ['.pdf', '.csv', '.xlsx']
                 file_ext = os.path.splitext(file.name)[1].lower()
                 
@@ -36,28 +34,24 @@ def upload_files(request):
                 unique_filename = f"{hashed_name}{file_ext}"
                 file_path = os.path.join(upload_dir, unique_filename)
 
-                # Save file
                 with open(file_path, 'wb+') as destination:
                     for chunk in file.chunks():
                         destination.write(chunk)
                 
                 uploaded_files.append(unique_filename)
 
-                # If it's a PDF file, analyze it
                 if file_ext.lower() == '.pdf':
                     try:
                         result = analyze_bank_statement(file_path)
                         fraud_analysis = result.get('summary', {}).get('fraud_analysis', {})
                         transactions = result.get('transactions', [])
                         
-                        # Sort transactions by amount and get top 5
                         largest_transactions = sorted(
                             transactions, 
                             key=lambda x: abs(float(x.get('amount', 0))), 
                             reverse=True
                         )[:5]
 
-                        # Calculate additional metrics
                         total_transactions = len(transactions)
                         total_amount = sum(abs(float(t.get('amount', 0))) for t in transactions)
                         average_transaction = total_amount / total_transactions if total_transactions > 0 else 0
