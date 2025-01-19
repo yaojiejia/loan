@@ -19,7 +19,7 @@ function App() {
     });
 
     try {
-      const response = await fetch('http://100.25.217.27:8000/api/upload/', {
+      const response = await fetch('http://localhost:8000/api/upload/', {
         method: 'POST',
         body: formData,
       }); 
