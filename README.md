@@ -3,6 +3,7 @@
 
 ## **Overview**
 A full-stack web application that analyzes bank statements for potential fraudulent transactions using machine learning. The system processes PDF bank statements, extracts transaction data, and provides detailed fraud analysis metrics.
+![image](https://github.com/user-attachments/assets/a02633a3-09cf-4346-abca-8bc3bcf09fdd)
 
 ## **Features**
 * PDF bank statement upload and processing
